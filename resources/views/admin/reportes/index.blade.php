@@ -66,7 +66,7 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($ventasPorComercial as $comercial)
                                 <tr>
-                                    <td class="px-6 py-4 text-sm font-medium">{{ $comercial->user->name }}</td>
+                                    <td class="px-6 py-4 text-sm font-medium">{{ $comercial->user?->name ?? 'Sin usuario' }}</td>
                                     <td class="px-6 py-4 text-sm font-mono text-indigo-600">{{ $comercial->codigo_ref }}</td>
                                     <td class="px-6 py-4 text-sm">{{ $comercial->tickets_referidos_count }}</td>
                                     <td class="px-6 py-4 text-sm font-medium text-green-600">${{ number_format($comercial->monto_recaudado, 0, ',', '.') }}</td>

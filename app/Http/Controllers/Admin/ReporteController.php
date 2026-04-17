@@ -20,6 +20,7 @@ class ReporteController extends Controller
         ])->latest()->get();
 
         $ventasPorComercial = Comercial::with('user')
+            ->whereHas('user') // Solo comerciales con usuario válido
             ->withCount(['tickets as tickets_referidos_count' => fn ($q) => $q->where('estado', 'pagado')])
             ->get()
             ->map(function ($comercial) {
