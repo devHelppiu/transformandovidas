@@ -25,7 +25,7 @@ class ReporteController extends Controller
             ->get()
             ->map(function ($comercial) {
                 $comercial->monto_recaudado = $comercial->tickets()
-                    ->where('estado', 'pagado')
+                    ->where('tickets.estado', 'pagado')  // Especificar tabla para evitar ambiguedad
                     ->join('sorteos', 'tickets.sorteo_id', '=', 'sorteos.id')
                     ->sum('sorteos.precio_ticket');
                 return $comercial;
