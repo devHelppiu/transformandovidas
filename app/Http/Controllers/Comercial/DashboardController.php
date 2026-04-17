@@ -30,8 +30,12 @@ class DashboardController extends Controller
             ->get()
             ->groupBy('sorteo_id');
 
-        $enlace = url("/sorteo/1?ref={$comercial->codigo_ref}");
+        // Enlace de referido universal (redirige al sorteo activo)
+        $enlace = route('referido', $comercial->codigo_ref);
+        
+        // Sorteos activos para enlaces específicos
+        $sorteosActivos = \App\Models\Sorteo::where('estado', 'activo')->latest()->get();
 
-        return view('comercial.dashboard', compact('comercial', 'stats', 'ticketsPorSorteo', 'enlace'));
+        return view('comercial.dashboard', compact('comercial', 'stats', 'ticketsPorSorteo', 'enlace', 'sorteosActivos'));
     }
 }

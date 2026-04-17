@@ -8,18 +8,49 @@
             <!-- Referral Info -->
             <div class="bg-indigo-50 border border-indigo-200 overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
                 <h3 class="text-lg font-semibold text-indigo-900 mb-3">Tu enlace de referido</h3>
-                <div class="flex items-center gap-4" x-data="{ copied: false }">
-                    <div class="flex-1 bg-white rounded-md border border-indigo-300 px-4 py-2 font-mono text-sm text-indigo-800 truncate">
-                        {{ $enlace }}
+                
+                <!-- Enlace universal -->
+                <div class="mb-4">
+                    <p class="text-sm text-indigo-700 mb-2">Enlace universal (redirige automáticamente al sorteo activo):</p>
+                    <div class="flex items-center gap-4" x-data="{ copied: false }">
+                        <div class="flex-1 bg-white rounded-md border border-indigo-300 px-4 py-2 font-mono text-sm text-indigo-800 truncate">
+                            {{ $enlace }}
+                        </div>
+                        <button @click="navigator.clipboard.writeText('{{ $enlace }}'); copied = true; setTimeout(() => copied = false, 2000)"
+                                class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700 whitespace-nowrap">
+                            <span x-show="!copied">Copiar</span>
+                            <span x-show="copied" x-cloak>¡Copiado!</span>
+                        </button>
                     </div>
-                    <button @click="navigator.clipboard.writeText('{{ $enlace }}'); copied = true; setTimeout(() => copied = false, 2000)"
-                            class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700 whitespace-nowrap">
-                        <span x-show="!copied">Copiar enlace</span>
-                        <span x-show="copied" x-cloak>¡Copiado!</span>
-                    </button>
                 </div>
-                <p class="mt-2 text-sm text-indigo-700">
-                    Código: <span class="font-mono font-bold">{{ $comercial->codigo_ref }}</span>
+
+                <!-- Enlaces específicos por sorteo -->
+                @if($sorteosActivos->count() > 0)
+                    <div class="border-t border-indigo-200 pt-4 mt-4">
+                        <p class="text-sm text-indigo-700 mb-3">O usa enlaces específicos por sorteo:</p>
+                        <div class="space-y-2">
+                            @foreach($sorteosActivos as $sorteo)
+                                @php $enlaceSorteo = route('sorteo.publico', ['sorteo' => $sorteo, 'ref' => $comercial->codigo_ref]); @endphp
+                                <div class="flex items-center gap-3" x-data="{ copied: false }">
+                                    <span class="text-sm font-medium text-gray-700 w-48 truncate">{{ $sorteo->nombre }}</span>
+                                    <div class="flex-1 bg-white rounded-md border border-gray-300 px-3 py-1.5 font-mono text-xs text-gray-600 truncate">
+                                        {{ $enlaceSorteo }}
+                                    </div>
+                                    <button @click="navigator.clipboard.writeText('{{ $enlaceSorteo }}'); copied = true; setTimeout(() => copied = false, 2000)"
+                                            class="bg-gray-600 text-white px-3 py-1.5 rounded text-xs hover:bg-gray-700 whitespace-nowrap">
+                                        <span x-show="!copied">Copiar</span>
+                                        <span x-show="copied" x-cloak>✓</span>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <p class="text-sm text-yellow-700 mt-3">⚠️ No hay sorteos activos en este momento.</p>
+                @endif
+
+                <p class="mt-4 text-sm text-indigo-700">
+                    Tu código: <span class="font-mono font-bold bg-white px-2 py-1 rounded">{{ $comercial->codigo_ref }}</span>
                 </p>
             </div>
 

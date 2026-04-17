@@ -16,6 +16,17 @@ Route::get('/', function () {
     return view('welcome', compact('sorteos'));
 });
 
+// --- Referral link (redirects to active sorteo) ---
+Route::get('/ref/{codigo}', function (string $codigo) {
+    $sorteo = \App\Models\Sorteo::where('estado', 'activo')->latest()->first();
+    
+    if (!$sorteo) {
+        return redirect('/')->with('info', 'No hay sorteos activos en este momento.');
+    }
+    
+    return redirect()->route('sorteo.publico', ['sorteo' => $sorteo, 'ref' => $codigo]);
+})->name('referido');
+
 // --- Public sorteo page (captures referral) ---
 Route::get('/sorteo/{sorteo}', [SorteoPublicoController::class, 'show'])
     ->middleware('referral')
