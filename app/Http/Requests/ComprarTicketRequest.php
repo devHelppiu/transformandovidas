@@ -23,6 +23,8 @@ class ComprarTicketRequest extends FormRequest
             'codigo_referido' => ['nullable', 'string', 'max:10'],
             'combo_id' => ['nullable', 'integer', 'exists:combos,id'],
             'cantidad' => ['required', 'integer', 'min:1', 'max:100'],
+            'numeros' => ['nullable', 'array', 'max:100'],
+            'numeros.*' => ['string', 'size:4', 'regex:/^\d{4}$/'],
         ];
     }
 
@@ -70,6 +72,35 @@ class ComprarTicketRequest extends FormRequest
                     }
                     if (count($disponibles) < $cantidad) {
                         $validator->errors()->add('cantidad', 'No hay suficientes números disponibles.');
+                    }
+                }
+
+                // Validar números seleccionados manualmente
+                if ($this->filled('numeros') && is_array($this->numeros)) {
+                    $numerosElegidos = $this->numeros;
+                    $cantidadReal = $this->filled('combo_id') 
+                        ? Combo::find($this->combo_id)?->cantidad ?? count($numerosElegidos)
+                        : (int) $this->cantidad;
+
+                    // Verificar que la cantidad de números coincide
+                    if (count($numerosElegidos) !== $cantidadReal) {
+                        $validator->errors()->add('numeros', "Debes seleccionar exactamente {$cantidadReal} números.");
+                        return;
+                    }
+
+                    // Verificar que los números están dentro del rango del sorteo
+                    $maxNumero = str_pad($sorteo->total_tickets - 1, 4, '0', STR_PAD_LEFT);
+                    foreach ($numerosElegidos as $numero) {
+                        if ($numero > $maxNumero) {
+                            $validator->errors()->add('numeros', "El número {$numero} está fuera del rango del sorteo.");
+                            return;
+                        }
+                    }
+
+                    // Verificar que los números están disponibles
+                    $ocupados = array_diff($numerosElegidos, $disponibles);
+                    if (count($ocupados) > 0) {
+                        $validator->errors()->add('numeros', 'Los números ' . implode(', ', $ocupados) . ' ya no están disponibles.');
                     }
                 }
             },

@@ -53,7 +53,8 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php -r \"$f='vendor/laravel/framework/config/database.php';$c=file_get_contents($f);if(str_contains($c,'PDO::MYSQL_ATTR_SSL_CA')&&!str_contains($c,'PHP_VERSION_ID')){$c=str_replace('use Illuminate\\\\Support\\\\Str;','use Illuminate\\\\Support\\\\Str;\\nuse Pdo\\\\Mysql;',$c);$c=str_replace('PDO::MYSQL_ATTR_SSL_CA','(PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA)',$c);file_put_contents($f,$c);echo 'Patched PHP 8.5 deprecation in laravel/framework'.PHP_EOL;}\""
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

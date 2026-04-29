@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ticket extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'sorteo_id',
         'user_id',
         'comercial_id',
+        'lider_id',
         'comprador_nombre',
         'comprador_email',
         'comprador_telefono',
@@ -38,6 +42,11 @@ class Ticket extends Model
         return $this->belongsTo(Comercial::class);
     }
 
+    public function lider(): BelongsTo
+    {
+        return $this->belongsTo(Lider::class);
+    }
+
     public function pago(): HasOne
     {
         return $this->hasOne(Pago::class);
@@ -47,16 +56,16 @@ class Ticket extends Model
 
     public function scopeReservado($query)
     {
-        return $query->where('estado', 'reservado');
+        return $query->where('tickets.estado', 'reservado');
     }
 
     public function scopePagado($query)
     {
-        return $query->where('estado', 'pagado');
+        return $query->where('tickets.estado', 'pagado');
     }
 
     public function scopeAnulado($query)
     {
-        return $query->where('estado', 'anulado');
+        return $query->where('tickets.estado', 'anulado');
     }
 }

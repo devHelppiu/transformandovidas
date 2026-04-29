@@ -60,9 +60,10 @@ class HelppiuPayService
     }
 
     /**
-     * Verify a webhook signature (HMAC-SHA256).
+     * Verify a webhook signature (HMAC-SHA256) with optional timestamp validation.
+     * FIX 53: Replay attack protection - rejects events older than 5 minutes.
      */
-    public static function verifyWebhookSignature(string $payload, string $signature): bool
+    public static function verifyWebhookSignature(string $payload, string $signature, ?string $timestamp = null): bool
     {
         $secret = config('services.helppiu.webhook_secret');
 
@@ -70,7 +71,17 @@ class HelppiuPayService
             return false;
         }
 
-        $expected = hash_hmac('sha256', $payload, $secret);
+        // Reject events older than 5 minutes (replay attack protection)
+        if ($timestamp !== null) {
+            $ts = (int) $timestamp;
+            if ($ts === 0 || abs(time() - $ts) > 300) {
+                return false;
+            }
+        }
+
+        // Sign payload + timestamp if present (standard format: timestamp.payload)
+        $signedString = $timestamp ? "{$timestamp}.{$payload}" : $payload;
+        $expected = hash_hmac('sha256', $signedString, $secret);
 
         return hash_equals($expected, $signature);
     }

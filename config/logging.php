@@ -127,6 +127,15 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        // Canal dedicado para auditoría de pagos Helppiu (FIX 58)
+        'helppiu' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/helppiu.log'),
+            'level' => 'debug',
+            'days' => 90,
+            'replace_placeholders' => true,
+        ],
+
     ],
 
 ];

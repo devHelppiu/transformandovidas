@@ -3,8 +3,8 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <a href="/" class="text-xl font-bold text-indigo-600">
-                        Transformando Vidas
+                    <a href="/">
+                        <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-8 w-auto">
                     </a>
                 </div>
 
@@ -17,13 +17,45 @@
                             <x-nav-link :href="route('admin.sorteos.index')" :active="request()->routeIs('admin.sorteos.*')">
                                 Sorteos
                             </x-nav-link>
+                            <x-nav-link :href="route('admin.coordinadores.index')" :active="request()->routeIs('admin.coordinadores.*')">
+                                Coordinadores
+                            </x-nav-link>
                             <x-nav-link :href="route('admin.comerciales.index')" :active="request()->routeIs('admin.comerciales.*')">
                                 Comerciales
                             </x-nav-link>
                             <x-nav-link :href="route('admin.pagos.index')" :active="request()->routeIs('admin.pagos.*')">
                                 Pagos
                             </x-nav-link>
+                            <x-nav-link :href="route('admin.comisiones.config')" :active="request()->routeIs('admin.comisiones.*')">
+                                Comisiones
+                            </x-nav-link>
                             <x-nav-link :href="route('admin.reportes.index')" :active="request()->routeIs('admin.reportes.*')">
+                                Reportes
+                            </x-nav-link>
+                        @elseif(auth()->user()->isCoordinador())
+                            <x-nav-link :href="route('coordinador.dashboard')" :active="request()->routeIs('coordinador.dashboard')">
+                                Dashboard
+                            </x-nav-link>
+                            <x-nav-link :href="route('coordinador.lideres.index')" :active="request()->routeIs('coordinador.lideres.*')">
+                                Mis Líderes
+                            </x-nav-link>
+                            <x-nav-link :href="route('coordinador.comisiones.index')" :active="request()->routeIs('coordinador.comisiones.*')">
+                                Comisiones
+                            </x-nav-link>
+                            <x-nav-link :href="route('coordinador.reportes.index')" :active="request()->routeIs('coordinador.reportes.*')">
+                                Reportes
+                            </x-nav-link>
+                        @elseif(auth()->user()->isLider())
+                            <x-nav-link :href="route('lider.dashboard')" :active="request()->routeIs('lider.dashboard')">
+                                Dashboard
+                            </x-nav-link>
+                            <x-nav-link :href="route('lider.comerciales.index')" :active="request()->routeIs('lider.comerciales.*')">
+                                Mis Comerciales
+                            </x-nav-link>
+                            <x-nav-link :href="route('lider.comisiones.index')" :active="request()->routeIs('lider.comisiones.*')">
+                                Comisiones
+                            </x-nav-link>
+                            <x-nav-link :href="route('lider.reportes.index')" :active="request()->routeIs('lider.reportes.*')">
                                 Reportes
                             </x-nav-link>
                         @elseif(auth()->user()->isComercial())
@@ -99,9 +131,21 @@
                 @if(auth()->user()->isAdmin())
                     <x-responsive-nav-link :href="route('admin.dashboard')">Dashboard</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.sorteos.index')">Sorteos</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.coordinadores.index')">Coordinadores</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.comerciales.index')">Comerciales</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.pagos.index')">Pagos</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.comisiones.config')">Comisiones</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.reportes.index')">Reportes</x-responsive-nav-link>
+                @elseif(auth()->user()->isCoordinador())
+                    <x-responsive-nav-link :href="route('coordinador.dashboard')">Dashboard</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('coordinador.lideres.index')">Mis Líderes</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('coordinador.comisiones.index')">Comisiones</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('coordinador.reportes.index')">Reportes</x-responsive-nav-link>
+                @elseif(auth()->user()->isLider())
+                    <x-responsive-nav-link :href="route('lider.dashboard')">Dashboard</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('lider.comerciales.index')">Mis Comerciales</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('lider.comisiones.index')">Comisiones</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('lider.reportes.index')">Reportes</x-responsive-nav-link>
                 @elseif(auth()->user()->isComercial())
                     <x-responsive-nav-link :href="route('comercial.dashboard')">Dashboard</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('comercial.comisiones.index')">Comisiones</x-responsive-nav-link>

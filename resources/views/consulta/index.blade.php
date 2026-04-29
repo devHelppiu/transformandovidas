@@ -1,38 +1,44 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Consultar Mis Tickets</h2>
-    </x-slot>
+<x-public-layout>
+    <x-slot name="title">Mis Tickets — {{ config('app.name') }}</x-slot>
 
-    <div class="py-12">
-        <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
+    <div class="bg-tv-bg min-h-screen py-16">
+        <div class="max-w-lg mx-auto px-4 sm:px-6">
+
             <x-flash-messages />
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <div class="text-center mb-6">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
-                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-tv-bg rounded-2xl mb-4">
+                        <svg class="w-8 h-8 text-tv-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">Busca tus tickets</h3>
-                    <p class="text-sm text-gray-500 mt-1">Ingresa el correo electrónico que usaste al momento de la compra.</p>
+                    <h1 class="font-urbanist font-bold text-tv-blue-dark text-2xl">Mis Tickets</h1>
+                    <p class="font-urbanist text-sm text-gray-500 mt-2">
+                        Ingresa el correo electrónico que usaste al momento de la compra.
+                    </p>
                 </div>
 
                 <form method="POST" action="{{ route('consulta.tickets.buscar') }}">
                     @csrf
                     <div class="space-y-4">
                         <div>
-                            <x-input-label for="email" value="Correo electrónico" />
-                            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email')" required autofocus placeholder="tu@correo.com" />
+                            <label for="email" class="block font-urbanist text-sm font-medium text-gray-700 mb-1.5">
+                                Correo electrónico
+                            </label>
+                            <input id="email" name="email" type="email"
+                                   class="w-full rounded-xl border-gray-200 focus:border-tv-blue focus:ring-tv-blue py-3 px-4 font-urbanist text-sm"
+                                   value="{{ old('email') }}" required autofocus placeholder="tu@correo.com"/>
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
-
-                        <x-primary-button class="w-full justify-center py-3">
-                            Buscar Tickets
-                        </x-primary-button>
+                        <button type="submit"
+                                class="w-full py-3.5 rounded-xl bg-tv-blue hover:bg-tv-blue/90 text-white font-urbanist font-bold text-sm transition-all shadow-lg shadow-tv-blue/20 active:scale-[0.98]">
+                            Buscar mis tickets
+                        </button>
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
-</x-app-layout>
+</x-public-layout>

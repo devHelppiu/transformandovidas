@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateSorteoRequest;
 use App\Models\Sorteo;
 use App\Services\SorteoService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class SorteoController extends Controller
 {
@@ -28,7 +29,14 @@ class SorteoController extends Controller
 
     public function store(StoreSorteoRequest $request): RedirectResponse
     {
-        Sorteo::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('imagen')) {
+            $data['imagen'] = $request->file('imagen')->store('sorteos', 'public');
+        }
+
+        Sorteo::create($data);
+
         return redirect()->route('admin.sorteos.index')
             ->with('success', 'Sorteo creado exitosamente.');
     }
@@ -52,7 +60,24 @@ class SorteoController extends Controller
 
     public function update(UpdateSorteoRequest $request, Sorteo $sorteo): RedirectResponse
     {
-        $sorteo->update($request->validated());
+        $data = $request->validated();
+        unset($data['eliminar_imagen']);
+
+        // Reemplazar imagen
+        if ($request->hasFile('imagen')) {
+            if ($sorteo->imagen) {
+                Storage::disk('public')->delete($sorteo->imagen);
+            }
+            $data['imagen'] = $request->file('imagen')->store('sorteos', 'public');
+        }
+        // Eliminar imagen sin reemplazo
+        elseif ($request->boolean('eliminar_imagen') && $sorteo->imagen) {
+            Storage::disk('public')->delete($sorteo->imagen);
+            $data['imagen'] = null;
+        }
+
+        $sorteo->update($data);
+
         return redirect()->route('admin.sorteos.show', $sorteo)
             ->with('success', 'Sorteo actualizado exitosamente.');
     }

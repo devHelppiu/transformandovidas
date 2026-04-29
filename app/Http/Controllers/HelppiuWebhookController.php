@@ -17,10 +17,22 @@ class HelppiuWebhookController extends Controller
         $payload = $request->getContent();
         $signature = $request->header('X-Helppiu-Signature', '');
 
-        // Verify HMAC-SHA256 signature if webhook secret is configured
+        // Verify HMAC-SHA256 signature — REQUIRED in production
         $webhookSecret = config('services.helppiu.webhook_secret');
-        if ($webhookSecret && ! HelppiuPayService::verifyWebhookSignature($payload, $signature)) {
-            Log::warning('Webhook Helppiu: firma inválida', ['signature' => $signature]);
+        
+        if (empty($webhookSecret)) {
+            Log::channel('helppiu')->critical('HELPPIU_WEBHOOK_SECRET no configurado, rechazando webhook');
+            return response()->json(['error' => 'Webhook secret not configured'], 503);
+        }
+        
+        // FIX 53: Include timestamp for replay attack protection
+        $timestamp = $request->header('X-Helppiu-Timestamp');
+        if (empty($signature) || ! HelppiuPayService::verifyWebhookSignature($payload, $signature, $timestamp)) {
+            Log::channel('helppiu')->warning('Firma inválida', [
+                'signature_present' => !empty($signature),
+                'timestamp_present' => !empty($timestamp),
+                'ip' => $request->ip(),
+            ]);
             return response()->json(['error' => 'Invalid signature'], 401);
         }
 
@@ -28,7 +40,28 @@ class HelppiuWebhookController extends Controller
         $event = $data['event'] ?? '';
         $tx = $data['data'] ?? [];
 
-        Log::info('Webhook Helppiu recibido', ['event' => $event, 'reference' => $tx['reference'] ?? '']);
+        Log::channel('helppiu')->info('Webhook recibido', ['event' => $event, 'reference' => $tx['reference'] ?? '']);
+
+        // FIX 54: Idempotency check - prevent duplicate processing
+        $txId = $tx['transaction_id'] ?? null;
+        $webhookEvent = null;
+        if ($txId) {
+            $existing = \App\Models\WebhookEvent::where('transaction_id', $txId)->first();
+            if ($existing && $existing->processed_at) {
+                Log::channel('helppiu')->info('Webhook duplicado, ignorando', [
+                    'transaction_id' => $txId,
+                    'event' => $event,
+                ]);
+                return response()->json(['status' => 'already_processed']);
+            }
+            
+            $webhookEvent = $existing ?: \App\Models\WebhookEvent::create([
+                'source' => 'helppiu',
+                'event_type' => $event,
+                'transaction_id' => $txId,
+                'payload' => $data,
+            ]);
+        }
 
         match ($event) {
             'transaction.approved' => $this->handleApproved($tx),
@@ -36,8 +69,13 @@ class HelppiuWebhookController extends Controller
             'transaction.declined', 'transaction.failed', 'transaction.error' => $this->handleDeclined($tx),
             'transaction.reversed' => $this->handleReversed($tx),
             'checkout.completed' => $this->handleCheckoutCompleted($tx),
-            default => Log::info('Webhook Helppiu: evento no manejado', ['event' => $event]),
+            default => Log::channel('helppiu')->info('Evento no manejado', ['event' => $event]),
         };
+
+        // Mark webhook as processed
+        if ($webhookEvent) {
+            $webhookEvent->update(['processed_at' => now()]);
+        }
 
         return response()->json(['status' => 'ok']);
     }
@@ -126,7 +164,7 @@ class HelppiuWebhookController extends Controller
             $pago->ticket->update(['estado' => 'anulado']);
         }
 
-        Log::warning('Webhook Helppiu: transacción reversada', [
+        Log::channel('helppiu')->warning('Transacción reversada', [
             'reference' => $tx['reference'] ?? '',
             'grupo_compra' => $grupoCompra,
         ]);
@@ -135,6 +173,6 @@ class HelppiuWebhookController extends Controller
     private function handleCheckoutCompleted(array $tx): void
     {
         // Checkout completed - the transaction result comes via transaction.approved/declined
-        Log::info('Webhook Helppiu: checkout completado', ['reference' => $tx['reference'] ?? '']);
+        Log::channel('helppiu')->info('Checkout completado', ['reference' => $tx['reference'] ?? '']);
     }
 }

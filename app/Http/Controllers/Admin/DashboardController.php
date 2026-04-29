@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comision;
+use App\Models\Coordinador;
+use App\Models\Lider;
 use App\Models\Pago;
 use App\Models\Sorteo;
 use App\Models\Ticket;
@@ -20,6 +23,10 @@ class DashboardController extends Controller
             'pagos_pendientes' => Pago::where('estado', 'pendiente')->count(),
             'total_clientes' => User::where('role', 'cliente')->count(),
             'total_comerciales' => User::where('role', 'comercial')->count(),
+            'total_coordinadores' => Coordinador::where('is_active', true)->count(),
+            'total_lideres' => Lider::where('is_active', true)->count(),
+            'comisiones_pendientes' => Comision::where('estado', 'pendiente')->sum('monto_comision'),
+            'comisiones_acumuladas' => Comision::sum('monto_comision'),
         ];
 
         $sorteoActivo = Sorteo::where('estado', 'activo')->latest()->first();

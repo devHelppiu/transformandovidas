@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,10 +10,13 @@ use Illuminate\Support\Str;
 
 class Comercial extends Model
 {
+    use HasFactory;
+
     protected $table = 'comerciales';
 
     protected $fillable = [
         'user_id',
+        'lider_id',
         'codigo_ref',
         'comision_tipo',
         'comision_valor',
@@ -49,6 +53,11 @@ class Comercial extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function lider(): BelongsTo
+    {
+        return $this->belongsTo(Lider::class);
+    }
+
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
@@ -56,6 +65,7 @@ class Comercial extends Model
 
     public function comisiones(): HasMany
     {
-        return $this->hasMany(Comision::class);
+        return $this->hasMany(Comision::class, 'recipient_id')
+            ->where('recipient_type', 'Comercial');
     }
 }

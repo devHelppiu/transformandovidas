@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('comisiones', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('comercial_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('sorteo_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('comercial_id')->constrained('comerciales')->cascadeOnDelete();
+            $table->foreignId('sorteo_id')->constrained('sorteos')->cascadeOnDelete();
             $table->integer('total_tickets_referidos')->default(0);
             $table->decimal('monto_recaudado', 12, 2)->default(0);
             $table->decimal('monto_comision', 10, 2)->default(0);

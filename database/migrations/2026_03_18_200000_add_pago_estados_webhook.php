@@ -9,11 +9,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE pagos MODIFY COLUMN estado ENUM('pendiente', 'procesando', 'verificado', 'rechazado', 'reversado') DEFAULT 'pendiente'");
+        // Solo ejecutar MODIFY COLUMN en MySQL - SQLite usa string nativo
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE pagos MODIFY COLUMN estado ENUM('pendiente', 'procesando', 'verificado', 'rechazado', 'reversado') DEFAULT 'pendiente'");
+        }
+        // En SQLite el campo ya es string y acepta cualquier valor
     }
 
     public function down(): void
     {
-        DB::statement("ALTER TABLE pagos MODIFY COLUMN estado ENUM('pendiente', 'verificado', 'rechazado') DEFAULT 'pendiente'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE pagos MODIFY COLUMN estado ENUM('pendiente', 'verificado', 'rechazado') DEFAULT 'pendiente'");
+        }
     }
 };

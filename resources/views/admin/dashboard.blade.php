@@ -1,68 +1,114 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Panel de Administración</h2>
+        <h2 class="font-urbanist font-bold text-xl text-gray-800 leading-tight">Panel de Administración</h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <x-flash-messages />
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500">Sorteos Activos</div>
-                    <div class="text-3xl font-bold text-indigo-600">{{ $stats['sorteos_activos'] }}</div>
-                    <div class="text-xs text-gray-400 mt-1">de {{ $stats['total_sorteos'] }} totales</div>
+            {{-- Stats Grid - Row 1: Sorteos y Tickets --}}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                    <p class="font-urbanist text-sm text-gray-500">Sorteos Activos</p>
+                    <p class="font-urbanist font-bold text-3xl text-tv-blue mt-1">{{ $stats['sorteos_activos'] }}</p>
+                    <p class="font-urbanist text-xs text-gray-400 mt-1">de {{ $stats['total_sorteos'] }} totales</p>
                 </div>
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500">Tickets Pagados</div>
-                    <div class="text-3xl font-bold text-green-600">{{ $stats['tickets_pagados'] }}</div>
-                    <div class="text-xs text-gray-400 mt-1">de {{ $stats['total_tickets'] }} totales</div>
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                    <p class="font-urbanist text-sm text-gray-500">Tickets Pagados</p>
+                    <p class="font-urbanist font-bold text-3xl text-green-600 mt-1">{{ number_format($stats['tickets_pagados']) }}</p>
+                    <p class="font-urbanist text-xs text-gray-400 mt-1">de {{ number_format($stats['total_tickets']) }} totales</p>
                 </div>
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500">Pagos Pendientes</div>
-                    <div class="text-3xl font-bold text-yellow-600">{{ $stats['pagos_pendientes'] }}</div>
-                    <div class="text-xs text-gray-400 mt-1"><a href="{{ route('admin.pagos.index') }}" class="underline">Ver todos</a></div>
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                    <p class="font-urbanist text-sm text-gray-500">Pagos Pendientes</p>
+                    <p class="font-urbanist font-bold text-3xl text-amber-600 mt-1">{{ $stats['pagos_pendientes'] }}</p>
+                    <a href="{{ route('admin.pagos.index') }}" class="font-urbanist text-xs text-tv-blue hover:underline">Ver todos →</a>
                 </div>
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-sm font-medium text-gray-500">Clientes / Comerciales</div>
-                    <div class="text-3xl font-bold text-blue-600">{{ $stats['total_clientes'] }} / {{ $stats['total_comerciales'] }}</div>
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                    <p class="font-urbanist text-sm text-gray-500">Clientes / Comerciales</p>
+                    <p class="font-urbanist font-bold text-3xl text-tv-blue-dark mt-1">
+                        {{ $stats['total_clientes'] }} <span class="text-gray-300">/</span> {{ $stats['total_comerciales'] }}
+                    </p>
                 </div>
             </div>
 
-            <!-- Quick actions -->
+            {{-- Stats Grid - Row 2: Jerarquía y Comisiones --}}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                    <p class="font-urbanist text-sm text-gray-500">Coordinadores</p>
+                    <p class="font-urbanist font-bold text-3xl text-purple-600 mt-1">{{ $stats['total_coordinadores'] }}</p>
+                    <a href="{{ route('admin.coordinadores.index') }}" class="font-urbanist text-xs text-tv-blue hover:underline">Ver todos →</a>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                    <p class="font-urbanist text-sm text-gray-500">Líderes</p>
+                    <p class="font-urbanist font-bold text-3xl text-pink-600 mt-1">{{ $stats['total_lideres'] }}</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                    <p class="font-urbanist text-sm text-gray-500">Comisiones Pendientes</p>
+                    <p class="font-urbanist font-bold text-2xl text-amber-600 mt-1">${{ number_format($stats['comisiones_pendientes'], 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                    <p class="font-urbanist text-sm text-gray-500">Comisiones Totales</p>
+                    <p class="font-urbanist font-bold text-2xl text-green-600 mt-1">${{ number_format($stats['comisiones_acumuladas'], 0, ',', '.') }}</p>
+                </div>
+            </div>
+
+            {{-- Quick actions --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Sorteo activo -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-semibold mb-4">Sorteo Activo</h3>
+                {{-- Sorteo activo --}}
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                    <h3 class="font-urbanist font-bold text-gray-900 mb-4">Sorteo Activo</h3>
                     @if($sorteoActivo)
-                        <p class="text-gray-900 font-medium">{{ $sorteoActivo->nombre }}</p>
-                        <p class="text-sm text-gray-500">Fecha: {{ $sorteoActivo->fecha_sorteo->format('d/m/Y') }}</p>
-                        <p class="text-sm text-gray-500">Tickets vendidos: {{ $sorteoActivo->ticketsVendidos() }} / {{ $sorteoActivo->total_tickets }}</p>
-                        <a href="{{ route('admin.sorteos.show', $sorteoActivo) }}" class="mt-3 inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800">Ver detalle &rarr;</a>
+                        <p class="font-urbanist font-semibold text-gray-900">{{ $sorteoActivo->nombre }}</p>
+                        <p class="font-urbanist text-sm text-gray-500">Fecha: {{ $sorteoActivo->fecha_sorteo->format('d/m/Y') }}</p>
+                        <div class="mt-3">
+                            <div class="flex justify-between font-urbanist text-xs text-gray-500 mb-1">
+                                <span>Progreso de ventas</span>
+                                <span>{{ $sorteoActivo->ticketsVendidos() }} / {{ $sorteoActivo->total_tickets }}</span>
+                            </div>
+                            @php $pctVendido = $sorteoActivo->total_tickets > 0 ? round(($sorteoActivo->ticketsVendidos() / $sorteoActivo->total_tickets) * 100, 1) : 0; @endphp
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="h-2 rounded-full bg-gradient-to-r from-tv-blue to-tv-pink" style="width: {{ max($pctVendido, 1) }}%"></div>
+                            </div>
+                        </div>
+                        <a href="{{ route('admin.sorteos.show', $sorteoActivo) }}" class="font-urbanist mt-4 inline-flex items-center text-sm text-tv-blue hover:underline">Ver detalle →</a>
                     @else
-                        <p class="text-gray-500">No hay sorteos activos.</p>
-                        <a href="{{ route('admin.sorteos.create') }}" class="mt-3 inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800">Crear sorteo &rarr;</a>
+                        <p class="font-urbanist text-gray-500">No hay sorteos activos.</p>
+                        <a href="{{ route('admin.sorteos.create') }}" class="font-urbanist mt-3 inline-flex items-center text-sm text-tv-blue hover:underline">Crear sorteo →</a>
                     @endif
                 </div>
 
-                <!-- Últimos pagos pendientes -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-semibold mb-4">Últimos Pagos Pendientes</h3>
+                {{-- Últimos pagos pendientes --}}
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                    <h3 class="font-urbanist font-bold text-gray-900 mb-4">Últimos Pagos Pendientes</h3>
                     @forelse($ultimosPagos as $pago)
-                        <div class="flex justify-between items-center py-2 border-b last:border-0">
+                        <div class="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
                             <div>
-                                <span class="text-sm font-medium">{{ $pago->ticket->comprador_nombre }}</span>
-                                <span class="text-xs text-gray-500">- #{{ $pago->ticket->numero }}</span>
+                                <span class="font-urbanist text-sm font-medium text-gray-900">{{ $pago->ticket->comprador_nombre }}</span>
+                                <span class="font-mono text-xs text-gray-400">- #{{ $pago->ticket->numero }}</span>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm text-gray-600">${{ number_format($pago->monto, 0, ',', '.') }}</span>
-                                <a href="{{ route('admin.pagos.show', $pago) }}" class="text-xs text-indigo-600 hover:underline">Revisar</a>
+                            <div class="flex items-center gap-3">
+                                <span class="font-urbanist text-sm font-semibold text-gray-700">${{ number_format($pago->monto, 0, ',', '.') }}</span>
+                                <a href="{{ route('admin.pagos.show', $pago) }}" class="font-urbanist text-xs text-tv-blue hover:underline">Revisar</a>
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-500 text-sm">No hay pagos pendientes.</p>
+                        <p class="font-urbanist text-gray-500 text-sm">No hay pagos pendientes.</p>
                     @endforelse
+                </div>
+            </div>
+
+            {{-- Acceso rápido a configuración --}}
+            <div class="bg-gradient-to-r from-tv-blue to-tv-pink rounded-2xl p-6 shadow-lg">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h3 class="font-urbanist font-bold text-white text-lg">Configuración de Comisiones</h3>
+                        <p class="font-urbanist text-white/80 text-sm">Ajusta los porcentajes de comisión por rol y canal</p>
+                    </div>
+                    <a href="{{ route('admin.comisiones.config') }}" 
+                       class="bg-white text-tv-blue px-6 py-2.5 rounded-xl font-urbanist font-bold text-sm hover:bg-gray-50 transition-colors shadow-md">
+                        Configurar →
+                    </a>
                 </div>
             </div>
         </div>

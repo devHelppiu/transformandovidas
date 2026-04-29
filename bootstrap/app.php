@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust proxies (CloudFlare, load balancers) - FIX 56
+        $middleware->trustProxies(at: '*');
+        
         // Global security headers for all web requests
         $middleware->web(append: [
             \App\Http\Middleware\SecurityHeaders::class,

@@ -25,7 +25,10 @@ class StoreSorteoRequest extends FormRequest
             'total_tickets' => ['required', 'integer', 'min:1', 'max:10000'],
             'precio_ticket' => ['required', 'numeric', 'min:0.01'],
             'valor_premio' => ['nullable', 'numeric', 'min:0'],
+            'premio_extra' => ['nullable', 'string', 'max:80'],
             'compra_minima' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'pago_simulado' => ['nullable', 'boolean'],
+            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
     }
 }

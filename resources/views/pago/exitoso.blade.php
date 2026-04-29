@@ -1,57 +1,41 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pago Procesado — {{ config('app.name') }}</title>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="font-sans antialiased bg-gray-50">
-    <!-- Nav -->
-    <nav class="bg-white border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-            <a href="/" class="text-xl font-bold text-indigo-600">Transformando Vidas</a>
-            <a href="{{ route('consulta.tickets') }}" class="text-sm text-gray-700 hover:text-indigo-600">🎟️ Mis Tickets</a>
-        </div>
-    </nav>
+<x-public-layout>
+<x-slot name="title">Pago Procesado — {{ config('app.name') }}</x-slot>
 
-    <div class="py-12">
+    <div class="bg-tv-bg min-h-screen py-14">
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
                 {{-- Status header --}}
                 @if($estadoPago === 'verificado')
-                    <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-8 text-center text-white">
+                    <div class="bg-tv-blue p-8 text-center text-white">
                         <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold mb-1">¡Pago aprobado!</h3>
-                        <p class="text-green-100">Tu compra fue procesada exitosamente.</p>
+                        <h3 class="font-urbanist font-bold text-2xl mb-1">¡Pago aprobado!</h3>
+                        <p class="font-urbanist text-white/80">Tu compra fue procesada exitosamente.</p>
                     </div>
                 @elseif($estadoPago === 'rechazado')
-                    <div class="bg-gradient-to-r from-red-500 to-rose-600 p-8 text-center text-white">
+                    <div class="bg-red-500 p-8 text-center text-white">
                         <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold mb-1">Pago rechazado</h3>
-                        <p class="text-red-100">Tu pago no pudo ser procesado. Puedes intentarlo de nuevo.</p>
+                        <h3 class="font-urbanist font-bold text-2xl mb-1">Pago rechazado</h3>
+                        <p class="font-urbanist text-white/80">Tu pago no pudo ser procesado. Puedes intentarlo de nuevo.</p>
                     </div>
                 @else
-                    <div class="bg-gradient-to-r from-yellow-500 to-amber-500 p-8 text-center text-white">
+                    <div class="bg-amber-500 p-8 text-center text-white">
                         <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-10 h-10 text-white animate-spin" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-bold mb-1">Procesando pago…</h3>
-                        <p class="text-yellow-100">Estamos verificando tu transacción. Esta página se actualizará automáticamente.</p>
+                        <h3 class="font-urbanist font-bold text-2xl mb-1">Procesando pago…</h3>
+                        <p class="font-urbanist text-white/80">Estamos verificando tu transacción. Esta página se actualizará automáticamente.</p>
                     </div>
                 @endif
 
@@ -59,31 +43,31 @@
 
                     {{-- Order summary --}}
                     <div>
-                        <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Resumen de compra</h4>
-                        <div class="bg-gray-50 rounded-xl p-5 space-y-3">
-                            <div class="flex justify-between text-sm">
+                        <h4 class="font-urbanist text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Resumen de compra</h4>
+                        <div class="bg-tv-bg rounded-xl p-5 space-y-3">
+                            <div class="flex justify-between font-urbanist text-sm">
                                 <span class="text-gray-500">Sorteo</span>
                                 <span class="font-semibold text-gray-900">{{ $sorteo?->nombre }}</span>
                             </div>
-                            <div class="flex justify-between text-sm">
+                            <div class="flex justify-between font-urbanist text-sm">
                                 <span class="text-gray-500">Fecha del sorteo</span>
                                 <span class="font-semibold text-gray-900">{{ $sorteo?->fecha_sorteo->format('d/m/Y') }}</span>
                             </div>
-                            <div class="flex justify-between text-sm">
+                            <div class="flex justify-between font-urbanist text-sm">
                                 <span class="text-gray-500">Tickets comprados</span>
                                 <span class="font-semibold text-gray-900">{{ $tickets->count() }}</span>
                             </div>
                             <div class="border-t pt-3 flex justify-between">
-                                <span class="font-bold text-gray-900">Total pagado</span>
-                                <span class="font-bold text-lg text-indigo-600">{{ '$' . number_format($totalPagado, 0, ',', '.') }} COP</span>
+                                <span class="font-urbanist font-bold text-gray-900">Total pagado</span>
+                                <span class="font-urbanist font-bold text-lg text-tv-blue">${{ number_format($totalPagado, 0, ',', '.') }} COP</span>
                             </div>
                         </div>
                     </div>
 
                     {{-- Payment status --}}
                     <div>
-                        <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Estado del pago</h4>
-                        <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-4">
+                        <h4 class="font-urbanist text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Estado del pago</h4>
+                        <div class="flex items-center gap-3 bg-tv-bg rounded-xl p-4">
                             @if($estadoPago === 'verificado')
                                 <span class="flex-shrink-0 w-3 h-3 rounded-full bg-green-500"></span>
                                 <span class="font-semibold text-green-700">Aprobado</span>
@@ -106,13 +90,13 @@
                     {{-- Tickets list --}}
                     @if($tickets->isNotEmpty())
                         <div>
-                            <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">Tus tickets</h4>
+                            <h4 class="font-urbanist text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Tus tickets</h4>
                             <div class="space-y-2">
                                 @foreach($tickets as $ticket)
-                                    <div class="flex justify-between items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+                                    <div class="flex justify-between items-center bg-tv-bg rounded-xl px-4 py-3 border border-tv-bg">
                                         <div class="flex items-center gap-3">
-                                            <span class="text-2xl font-mono font-bold text-indigo-700">#{{ str_pad($ticket->numero, 4, '0', STR_PAD_LEFT) }}</span>
-                                            <span class="text-sm text-gray-500">{{ $sorteo?->nombre }}</span>
+                                            <span class="font-urbanist font-black text-tv-blue text-2xl">#{{ str_pad($ticket->numero, 4, '0', STR_PAD_LEFT) }}</span>
+                                            <span class="font-urbanist text-sm text-gray-500">{{ $sorteo?->nombre }}</span>
                                         </div>
                                         @if($ticket->estado === 'pagado')
                                             <span class="text-xs font-medium px-3 py-1 rounded-full bg-green-100 text-green-700">✓ Confirmado</span>
@@ -142,26 +126,26 @@
 
                     {{-- Actions --}}
                     <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                        <a href="{{ route('consulta.tickets') }}" class="flex-1 inline-flex items-center justify-center px-5 py-3 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition">
+                        <a href="{{ route('consulta.tickets') }}"
+                           class="flex-1 inline-flex items-center justify-center px-5 py-3 bg-tv-blue text-white rounded-xl font-urbanist font-semibold text-sm hover:bg-tv-blue/90 transition">
                             🎟️ Consultar mis tickets
                         </a>
-                        <a href="/" class="flex-1 inline-flex items-center justify-center px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition">
+                        <a href="/"
+                           class="flex-1 inline-flex items-center justify-center px-5 py-3 bg-gray-100 text-gray-700 rounded-xl font-urbanist font-semibold text-sm hover:bg-gray-200 transition">
                             Volver al inicio
                         </a>
                     </div>
                 </div>
             </div>
 
-            {{-- Reference --}}
-            <p class="text-center text-xs text-gray-400 mt-4">Referencia: TV-{{ Str::limit($grupo, 8, '') }}</p>
+            <p class="font-urbanist text-center text-xs text-gray-400 mt-4">Referencia: TV-{{ Str::limit($grupo, 8, '') }}</p>
         </div>
     </div>
 
-    {{-- Auto-refresh if payment is still pending or processing --}}
     @if(in_array($estadoPago, ['pendiente', 'procesando']))
-        <script>
-            setTimeout(function() { window.location.reload(); }, 5000);
-        </script>
+        @push('scripts')
+        <script>setTimeout(function() { window.location.reload(); }, 5000);</script>
+        @endpush
     @endif
-</body>
-</html>
+
+</x-public-layout>
