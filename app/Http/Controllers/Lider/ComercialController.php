@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Lider;
 use App\Http\Controllers\Controller;
 use App\Models\Comercial;
 use App\Models\User;
+use App\Notifications\BienvenidaNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -52,6 +53,9 @@ class ComercialController extends Controller
             'lider_id' => $lider->id,
             'is_active' => true,
         ]);
+
+        // Enviar notificación de bienvenida con credenciales
+        $user->notify(new BienvenidaNotification($validated['password'], 'comercial'));
 
         return redirect()->route('lider.comerciales.index')
             ->with('success', 'Comercial creado exitosamente.');

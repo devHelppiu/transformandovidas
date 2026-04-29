@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Coordinador;
 use App\Http\Controllers\Controller;
 use App\Models\Lider;
 use App\Models\User;
+use App\Notifications\BienvenidaNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -53,6 +54,9 @@ class LiderController extends Controller
             'codigo_ref' => Lider::generarCodigoRef(),
             'is_active' => true,
         ]);
+
+        // Enviar notificación de bienvenida con credenciales
+        $user->notify(new BienvenidaNotification($validated['password'], 'lider'));
 
         return redirect()->route('coordinador.lideres.index')
             ->with('success', 'Líder creado exitosamente.');

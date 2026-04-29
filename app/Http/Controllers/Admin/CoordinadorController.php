@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Coordinador;
 use App\Models\User;
+use App\Notifications\BienvenidaNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -45,6 +46,9 @@ class CoordinadorController extends Controller
             'user_id' => $user->id,
             'is_active' => true,
         ]);
+
+        // Enviar notificación de bienvenida con credenciales
+        $user->notify(new BienvenidaNotification($validated['password'], 'coordinador'));
 
         return redirect()->route('admin.coordinadores.index')
             ->with('success', 'Coordinador creado exitosamente.');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreComercialRequest;
 use App\Models\Comercial;
 use App\Models\User;
+use App\Notifications\BienvenidaNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -41,6 +42,9 @@ class ComercialController extends Controller
             'comision_tipo' => $request->comision_tipo,
             'comision_valor' => $request->comision_valor,
         ]);
+
+        // Enviar notificación de bienvenida con credenciales
+        $user->notify(new BienvenidaNotification($request->password, 'comercial'));
 
         return redirect()->route('admin.comerciales.index')
             ->with('success', 'Comercial creado exitosamente.');
