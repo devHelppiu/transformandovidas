@@ -23,9 +23,9 @@
             <div class="fixed -top-32 -right-32 w-96 h-96 rounded-full bg-tv-pink/10 blur-3xl pointer-events-none"></div>
             <div class="fixed -bottom-24 -left-24 w-80 h-80 rounded-full bg-tv-blue/10 blur-3xl pointer-events-none"></div>
 
-            <div class="relative z-10 mb-6">
+            <div class="relative z-10 mb-8 py-2">
                 <a href="/" class="flex items-center justify-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-20 w-auto">
+                    <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-24 w-auto block">
                 </a>
             </div>
 

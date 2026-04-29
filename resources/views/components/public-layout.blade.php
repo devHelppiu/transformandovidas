@@ -19,12 +19,12 @@
 <body class="font-urbanist antialiased bg-white">
 
     <!-- ── Navbar ── -->
-    <header x-data="{ open: false }" class="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
+    <header x-data="{ open: false }" class="bg-white border-b border-gray-100 sticky top-0 z-50 overflow-visible">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20 sm:h-24">
 
             <!-- Logo -->
             <a href="/">
-                <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-12 sm:h-14 w-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-14 sm:h-16 w-auto block">
             </a>
 
             <!-- Desktop nav -->
