@@ -24,7 +24,7 @@
 
             <!-- Logo -->
             <a href="/">
-                <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-10 w-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-12 sm:h-14 w-auto">
             </a>
 
             <!-- Desktop nav -->
@@ -91,7 +91,7 @@
                 <!-- Brand + Redes sociales -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-9 w-auto">
+                        <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-10 w-auto">
                     </div>
                     <p class="font-urbanist text-sm text-white/60 leading-relaxed max-w-xs mb-6">
                         Sorteos solidarios que cambian vidas.<br>

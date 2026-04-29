@@ -2,7 +2,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {{-- Logo --}}
         <a href="{{ route('cliente.dashboard') }}" class="flex-shrink-0">
-            <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-[58px] w-auto">
+            <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-12 max-h-12 max-w-[180px] object-contain">
         </a>
 
         {{-- Pill usuario con dropdown --}}

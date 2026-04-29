@@ -50,7 +50,7 @@
             </div>
 
             @if($sorteos->count())
-                <div class="@if($sorteos->count() === 1) max-w-3xl mx-auto @else grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 @endif">
+                <div class="@if($sorteos->count() === 1) max-w-3xl mx-auto @else flex flex-wrap justify-center gap-6 @endif">
                     @foreach($sorteos as $sorteo)
                         @php
                             $vendidos = $sorteo->tickets()->whereIn('estado', ['reservado','pagado'])->count();
@@ -58,7 +58,7 @@
                                 ? round(($vendidos / $sorteo->total_tickets) * 100, 1)
                                 : 0;
                         @endphp
-                        <div class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-tv-blue/20 transition-all duration-300 overflow-hidden flex flex-col">
+                        <div class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-tv-blue/20 transition-all duration-300 overflow-hidden flex flex-col @if($sorteos->count() > 1) w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] @endif">
                             {{-- Imagen del sorteo (si existe) --}}
                             @if($sorteo->imagen)
                                 <div class="aspect-[16/9] w-full overflow-hidden bg-tv-bg">

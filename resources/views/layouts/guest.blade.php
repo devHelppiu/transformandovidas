@@ -25,7 +25,7 @@
 
             <div class="relative z-10 mb-6">
                 <a href="/" class="flex items-center justify-center">
-                    <x-application-logo class="h-16 w-auto" />
+                    <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-20 w-auto">
                 </a>
             </div>
 
