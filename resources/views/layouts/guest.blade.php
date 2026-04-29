@@ -25,7 +25,7 @@
 
             <div class="relative z-10 mb-8 py-2">
                 <a href="/" class="flex items-center justify-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="Transformando Vidas" class="h-24 w-auto block">
+                    <img src="{{ asset('images/logo.svg') }}" alt="Transformando Vidas" class="h-24 w-auto block">
                 </a>
             </div>
 
